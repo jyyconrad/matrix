@@ -138,7 +138,13 @@ export async function sendMessageMatrix(
           if (!text) {
             continue;
           }
-          const content = buildTextContent(text, relation);
+          const content = buildTextContent(text, relation, opts.mentions);
+          // Add m.mentions field if mentions are provided
+          if (opts.mentions?.length) {
+            (content as any)["m.mentions"] = {
+              user_ids: opts.mentions.map(m => m.userId)
+            };
+          }
           const eventId = await sendContent(content);
           lastMessageId = eventId ?? lastMessageId;
         }

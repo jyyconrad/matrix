@@ -68,20 +68,9 @@ export type MatrixMediaContent = MessageEventContent &
     "org.matrix.msc3245.voice"?: Record<string, never>;
     "org.matrix.msc1767.audio"?: { duration: number };
   };
-
-export type MatrixOutboundContent = MatrixTextContent | MatrixMediaContent;
-
-export type ReactionEventContent = {
-  "m.relates_to": {
-    rel_type: typeof RelationType.Annotation;
-    event_id: string;
-    key: string;
-  };
-};
-
-export type MatrixSendResult = {
-  messageId: string;
-  roomId: string;
+export type MatrixMention = {
+  userId: string;
+  displayName?: string;
 };
 
 export type MatrixSendOpts = {
@@ -92,6 +81,15 @@ export type MatrixSendOpts = {
   threadId?: string | number | null;
   timeoutMs?: number;
   /** Send audio as voice message (voice bubble) instead of audio file. Defaults to false. */
+  audioAsVoice?: boolean;
+  /** List of users to mention in the message */
+  mentions?: MatrixMention[];
+};
+  replyToId?: string;
+  threadId?: string | number | null;
+  timeoutMs?: number;
+  /** Send audio as voice message (voice bubble) instead of audio file. Defaults to false. */
+  /** List of users to mention in the message */
   audioAsVoice?: boolean;
 };
 
@@ -106,4 +104,7 @@ export type MediaKind = "image" | "audio" | "video" | "document" | "unknown";
 export type MatrixFormattedContent = MessageEventContent & {
   format?: string;
   formatted_body?: string;
+};
+  userId: string;
+  displayName?: string;
 };

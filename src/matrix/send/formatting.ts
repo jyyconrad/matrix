@@ -1,5 +1,6 @@
 import { getMatrixRuntime } from "../../runtime.js";
 import { markdownToMatrixHtml } from "../format.js";
+  type MatrixMention,
 import {
   MsgType,
   RelationType,
@@ -90,7 +91,7 @@ function convertLocalPathsToOnlineUrls(text: string): string {
 // 导出函数供测试使用
 export { convertLocalPathsToOnlineUrls };
 
-export function buildTextContent(body: string, relation?: MatrixRelation): MatrixTextContent {
+export function buildTextContent(body: string, relation?: MatrixRelation, mentions?: MatrixMention[]): MatrixTextContent {
   // 先转换文档地址
   const convertedBody = convertLocalPathsToOnlineUrls(body);
   
@@ -104,11 +105,11 @@ export function buildTextContent(body: string, relation?: MatrixRelation): Matri
         msgtype: MsgType.Text,
         body: convertedBody,
       };
-  applyMatrixFormatting(content, convertedBody);
+  applyMatrixFormatting(content, convertedBody, mentions);
   return content;
 }
 
-export function applyMatrixFormatting(content: MatrixFormattedContent, body: string): void {
+export function applyMatrixFormatting(content: MatrixFormattedContent, body: string, mentions?: MatrixMention[]): void {
   // 先转换文档地址
   const convertedBody = convertLocalPathsToOnlineUrls(body);
   
@@ -118,6 +119,14 @@ export function applyMatrixFormatting(content: MatrixFormattedContent, body: str
   }
   content.format = "org.matrix.custom.html";
   content.formatted_body = formatted;
+  // Add mentions to formatted body if provided
+  if (mentions?.length) {
+    const mentionHtml = mentions
+      .map(m => buildMentionHtml(m.userId, m.displayName))
+      .join(" ");
+    content.formatted_body += ` ${mentionHtml}`;
+  }
+
 }
 
 export function buildReplyRelation(replyToId?: string): MatrixReplyRelation | undefined {
@@ -171,4 +180,16 @@ function isMatrixVoiceCompatibleAudio(opts: { contentType?: string; fileName?: s
     contentType: opts.contentType,
     fileName: opts.fileName,
   });
+}
+
+/**
+ * Build HTML for a Matrix mention
+ * @param userId The Matrix user ID to mention
+ * @param displayName Optional display name for the mention
+ * @returns HTML string for the mention
+ */
+export function buildMentionHtml(userId: string, displayName?: string): string {
+  const name = displayName || userId;
+  const encodedUserId = encodeURIComponent(userId);
+  return `<a href="https://matrix.to/#/${encodedUserId}">${name}</a>`;
 }
