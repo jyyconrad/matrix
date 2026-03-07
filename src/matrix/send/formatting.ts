@@ -1,10 +1,10 @@
 import { getMatrixRuntime } from "../../runtime.js";
 import { markdownToMatrixHtml } from "../format.js";
-  type MatrixMention,
 import {
   MsgType,
   RelationType,
   type MatrixFormattedContent,
+  type MatrixMention,
   type MatrixMediaMsgType,
   type MatrixRelation,
   type MatrixReplyRelation,

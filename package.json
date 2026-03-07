@@ -3,6 +3,12 @@
   "version": "2026.2.25",
   "description": "OpenClaw Matrix channel plugin",
   "type": "module",
+  "scripts": {
+    "postinstall": "patch-package",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage"
+  },
   "dependencies": {
     "@matrix-org/matrix-sdk-crypto-nodejs": "^0.4.0",
     "@vector-im/matrix-bot-sdk": "0.8.0-element.3",
@@ -31,6 +37,13 @@
     }
   },
   "devDependencies": {
-    "patch-package": "^8.0.1"
+    "@types/markdown-it": "^14.1.2",
+    "@types/node": "^25.3.5",
+    "@vitest/coverage-v8": "^4.0.18",
+    "openclaw": "^2026.3.2",
+    "patch-package": "^8.0.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.18"
   }
 }
